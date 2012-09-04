@@ -12,11 +12,13 @@
    :return-code hunchentoot:+http-not-found+
    :content-type "text/html"))
 
+(defun old-page (filename)
+  (tpl:root (list :content (alexandria:read-file-into-string filename))))
 
 ;; main
 
 (restas:define-route main ("/")
-  (tpl:root (list :headtitle "wefwefewf")))
+  (old-page "content/main.htm"))
 
 
 ;; plan file pages
@@ -31,8 +33,87 @@
        ,@body)))
 
 
-(def/route about ("about" :method :post)
-  (path "content/about.org"))
+
+
+
+(def/route 01.07.12 ("01.07.12")
+  (old-page "content/01.07.12.htm"))
+
+(def/route 01.09.12 ("01.09.12")
+  (old-page "content/01.09.12.htm"))
+
+(def/route 25.06.12 ("25.06.12")
+  (old-page "content/25.06.12.htm"))
+
+(def/route arhiv2012 ("arhiv2012")
+  (old-page "content/arhiv2012.htm"))
+
+(def/route arhiv2013 ("arhiv2013")
+  (old-page "content/arhiv2013.htm"))
+
+(def/route arhiv ("arhiv")
+  (old-page "content/arhiv.htm"))
+
+(def/route aspirantura ("aspirantura")
+  (old-page "content/aspirantura.htm"))
+
+(def/route contacts ("contacts")
+  (old-page "content/contacts.htm"))
+
+(def/route diplomy ("diplomy")
+  (old-page "content/diplomy.htm"))
+
+(def/route foto ("foto")
+  (old-page "content/foto.htm"))
+
+(def/route history ("history")
+  (old-page "content/history.htm"))
+
+(def/route index ("index")
+  (old-page "content/index.htm"))
+
+(def/route lab2009 ("lab2009")
+  (old-page "content/lab2009.htm"))
+
+(def/route praktika ("praktika")
+  (old-page "content/praktika.htm"))
+
+(def/route pr_doc ("pr_doc")
+  (old-page "content/pr_doc.htm"))
+
+(def/route predmety ("predmety")
+  (old-page "content/predmety.htm"))
+
+(def/route prepody ("prepody")
+  (old-page "content/prepody.htm"))
+
+(def/route pr_etap1 ("pr_etap1")
+  (old-page "content/pr_etap1.htm"))
+
+(def/route pr_etap2 ("pr_etap2")
+  (old-page "content/pr_etap2.htm"))
+
+(def/route pr_raspr2012 ("pr_raspr2012")
+  (old-page "content/pr_raspr2012.htm"))
+
+(def/route pr_spisorg ("pr_spisorg")
+  (old-page "content/pr_spisorg.htm"))
+
+(def/route pr_sroki ("pr_sroki")
+  (old-page "content/pr_sroki.htm"))
+
+(def/route pr_vidy ("pr_vidy")
+  (old-page "content/pr_vidy.htm"))
+
+(def/route pr_zayavka ("pr_zayavka")
+  (old-page "content/pr_zayavka.htm"))
+
+(def/route raspisanie ("raspisanie")
+  (old-page "content/raspisanie.htm"))
+
+
+
+
 ;; submodules
 
 (restas:mount-submodule -css- (#:restas.directory-publisher)
