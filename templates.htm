@@ -1,0 +1,72 @@
+// -*- mode: closure-template-html; fill-column: 140 -*-
+
+{namespace tpl}
+
+{template root}
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">{\n}
+  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">{\n}
+
+
+    <head>{\n}
+	  <title>{$headtitle}</title>{\n}
+	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />{\n}
+	  <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />{\n}
+    </head>{\n}
+
+
+    <body id="top">{\n}
+
+      <div class="header">{\n}
+        <p style="font-size:19px;font-family:times new roman">{\n}
+          <br> Санкт-Петербургский государственный университет водных коммуникаций </p>{\n}
+        <p style="font-size:27px;">{\n}
+          Гидротехнический факультет <br/>{\n}
+          Кафедра Гидротехнических сооружений, <br/>{\n}
+          конструкций и гидравлики (ГТС, К и Г)<br/>{\n}
+          </p>{\n}
+        </div>{\n}
+
+        <div class="navigation">{\n}
+          <a href="index.html">Главная</a>{\n}
+          <a href="history.html">История</a>{\n}
+          <a href="prepody.html">Сотрудники</a>{\n}
+          <a href="predmety.html">Предметы</a>{\n}
+          <a href="raspisanie.html">Расписание</a>{\n}
+          <div class="clearer"><span></span></div>{\n}
+        </div>{\n}
+
+        <div class="navigation">{\n}
+          <a href="praktika.html">Практика</a>{\n}
+          <a href="diplomy.html">Дипломы</a>{\n}
+          <a href="aspirantura.html">Аспиранты</a>{\n}
+          <a href="foto.html">Фотографии</a>{\n}
+          <a href="contacts.html">Контакты</a>{\n}
+          <div class="clearer"><span></span></div>{\n}
+        </div>{\n}
+
+        <div class="search">{\n}
+          <form  method="get" action="/search" target="_blank">{\n}
+            <input  name="q" id="form-query" value="" placeholder="поиск по сайту" />{\n}
+            <input type=submit value="искать" />{\n}
+          </form>{\n}
+        </div>{\n}
+      </div>{\n}
+
+      <div class="container">{\n}
+        <div class="content">{\n}
+          {$content | noAutoescape}{\n}{\n}
+        </div>{\n}
+
+        <div class="footer">{\n}
+          kafgsk.ru created by Olesya Fedotova{\n}
+          &copy; 2012{\n}
+          <br />{\n}
+          feolan@mail.ru{\n}
+        </div>{\n}
+
+      </div>{\n}
+
+    </body>{\n}
+  </html>{\n}
+{/template}
+
