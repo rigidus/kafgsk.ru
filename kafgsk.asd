@@ -1,4 +1,4 @@
-xs(require 'swank)
+(require 'swank)
 
 (asdf:defsystem #:kafgsk
   :version      "0.0.2"
