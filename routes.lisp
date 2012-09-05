@@ -112,8 +112,6 @@
   (old-page "content/raspisanie.htm"))
 
 
-
-
 ;; submodules
 
 (restas:mount-submodule -css- (#:restas.directory-publisher)
