@@ -1,3 +1,5 @@
+(require 'swank)
+
 (asdf:defsystem #:kafgsk
   :version      "0.0.2"
   :author       "rigidus <i.am.rigidus@gmail.com>"

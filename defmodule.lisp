@@ -1,4 +1,4 @@
- (require 'closer-mop)
+(require 'closer-mop)
 (require 'postmodern)
 (require 'restas)
 (require 'closure-template)
