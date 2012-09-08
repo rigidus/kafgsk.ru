@@ -37,4 +37,8 @@
            *teachers*)
   (print result))
 
-(kurs (gethash 1 *teachers*))
+
+(rank (gethash 2 *teachers*))
+
+
+
