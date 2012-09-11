@@ -90,8 +90,9 @@
   (defparameter *teacher* (make-hash-table :test #'equal))
   (defun count-teacher () (hash-table-count *teacher*))
   (defclass teacher ()
-    ((name :initarg :name :initform "" :accessor name)
-     (rank :initarg :rank :initform "" :accessor rank)))
+    ((name   :initarg :name   :initform ""  :accessor name)
+     (rank   :initarg :rank   :initform ""  :accessor rank)
+     (curses :initarg :curses :initform nil :accessor curses)))
   (defun make-teacher (&rest initargs)
     (let ((id (incf-teacher-id)))
       (values
@@ -123,12 +124,28 @@
       rs)))
 
 
-;; Создаем объекты учителей и учеников
-(loop :for x :in *teachers-list* :do
-   (make-teacher :name (car x)  :rank (cadr x))
-   ;; Для каждого из названий курсов, которые ведет этот учитель...
-   (loop :for curs :in (caddr x) :do
-      (make-curs :name curs)))
+;; Создаем объекты учителей и курсов (см. в консоли лог создания и связывания объектов)
+(loop :for teacher-elt :in *teachers-list* :do
+   (let ((teacher-pair (multiple-value-bind (obj id)
+                           (make-teacher :name (car teacher-elt)  :rank (cadr teacher-elt))
+                         (cons obj id))))
+     (format t "~%=== make-teacher ~3D : ~A" (cdr teacher-pair) (name (car teacher-pair)))
+     ;; Для каждого из названий курсов, которые ведет этот учитель...
+     (loop :for curs :in (caddr teacher-elt) :do
+        ;; Попробуем поискать среди уже созданных курсов
+        (let ((curs-pair (car (find-curs #'(lambda (x) (string= (name (car x)) curs))))))
+          (when curs-pair
+            ;; Нашли среди созданных курсов курс с таким же названием
+            (format t "~%::: find-kurs    ~3D    : ~A" (cdr curs-pair) (name (car curs-pair))))
+          (unless curs-pair
+            ;; Если курса с таким названием еще нет то создаем объект курса
+            (multiple-value-bind (obj id)
+                (make-curs :name curs)
+            (setf curs-pair (cons obj id))
+            (format t "~%--- make-kurs    ~3D    : ~A" (cdr curs-pair) (name (car curs-pair)))))
+          ;; Добавляем связь с курсом в поле `curses` учителя
+          (push (cdr curs-pair) (curses (car teacher-pair)))))))
+
 
 ;; Получаем все курсы
 (all-curs)
@@ -144,3 +161,10 @@
 ;; Находим объект курса по имени
 (find-curs #'(lambda (x)
                (string= (name (car x)) "Безопасность ГТС")))
+
+
+;; Получаем имена учителей вместе с номерами курсов которые они ведут
+(mapcar #'(lambda (x)
+            (print (list (name (car x)) (curses (car x)))))
+        (all-teacher))
+
