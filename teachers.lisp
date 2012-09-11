@@ -8,16 +8,6 @@
 (defmacro err (var)
   `(error (format nil "ERR:[~A]" (bprint ,var))))
 
-(defmacro do-hash ((ht &optional (v 'v) (k 'k)) &body body)
-  `(loop :for ,v :being :the :hash-values :in ,ht :using (hash-key ,k) :do
-      ,@body))
-
-(defmacro do-hash-collect ((ht &optional (v 'v) (k 'k)) &body body)
-  `(loop :for ,v :being :the :hash-values :in ,ht :using (hash-key ,k) :collect
-      ,@body))
-
-(defmacro append-link (lst elt)
-  `(setf ,lst (remove-duplicates (append ,lst (list ,elt)))))
 
 ;; data
 
@@ -62,27 +52,30 @@
   (defun init-curs-id (init-value) (setf inc-curs-id init-value))
   (defparameter *curs* (make-hash-table :test #'equal))
   (defun count-curs () (hash-table-count *curs*))
-  (defclass curs nil ((name :initarg :name :initform "" :accessor name)))
+  (defclass curs ()
+    ((name :initarg :name :initform "" :accessor name)))
   (defun make-curs (&rest initargs)
     (let ((id (incf-curs-id)))
       (values
        (setf (gethash id *curs*)
              (apply #'make-instance (list* 'curs initargs)))
        id)))
-  (defun all-curs () (do-hash-collect (*curs*) (cons v k)))
+  (defun all-curs ()
+    (loop :for v :being :the :hash-values :in *curs* :using (hash-key k) :collect
+       (cons v k)))
   (defun get-curs (var)
     (when (typep var 'integer)
       (multiple-value-bind (hash-val present-p)
           (gethash var *curs*)
         (unless present-p (err 'not-present))
         (setf var hash-val)))
-    (unless (typep var 'curs) (err 'param-user-type-error))
+    (unless (typep var 'curs)
+      (err 'param-user-type-error))
     var)
-  (defmethod find-curs
-      ((obj curs))
-    (do-hash (*curs*) (when (equal v obj) (return k))))
-  (defmethod find-curs
-      ((func function))
+  (defmethod find-curs ((obj curs))
+    (loop :for v :being :the :hash-values :in *curs* :using (hash-key k)
+       :do (when (equal v obj) (return k))))
+  (defmethod find-curs ((func function))
     (let ((rs))
       (mapcar
        #'(lambda (x)
@@ -96,7 +89,7 @@
   (defun init-teacher-id (init-value) (setf inc-teacher-id init-value))
   (defparameter *teacher* (make-hash-table :test #'equal))
   (defun count-teacher () (hash-table-count *teacher*))
-  (defclass teacher nil
+  (defclass teacher ()
     ((name :initarg :name :initform "" :accessor name)
      (rank :initarg :rank :initform "" :accessor rank)))
   (defun make-teacher (&rest initargs)
@@ -105,20 +98,22 @@
        (setf (gethash id *teacher*)
              (apply #'make-instance (list* 'teacher initargs)))
        id)))
-  (defun all-teacher () (do-hash-collect (*teacher*) (cons v k)))
+  (defun all-teacher ()
+    (loop :for v :being :the :hash-values :in *teacher* :using (hash-key k) :collect
+       (cons v k)))
   (defun get-teacher (var)
     (when (typep var 'integer)
       (multiple-value-bind (hash-val present-p)
           (gethash var *teacher*)
         (unless present-p (err 'not-present))
         (setf var hash-val)))
-    (unless (typep var 'teacher) (err 'param-user-type-error))
+    (unless (typep var 'teacher)
+      (err 'param-user-type-error))
     var)
-  (defmethod find-teacher
-      ((obj teacher))
-    (do-hash (*teacher*) (when (equal v obj) (return k))))
-  (defmethod find-teacher
-      ((func function))
+  (defmethod find-teacher ((obj teacher))
+    (loop :for v :being :the :hash-values :in *teacher* :using (hash-key k)
+       :do (when (equal v obj) (return k))))
+  (defmethod find-teacher ((func function))
     (let ((rs))
       (mapcar
        #'(lambda (x)
@@ -141,3 +136,6 @@
 (mapcar #'(lambda (x)
             (print (name (car x))))
         (all-curs))
+
+(find-curs #'(lambda (x)
+               (string= (name (car x)) "Безопасность ГТС")))
