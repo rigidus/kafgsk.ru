@@ -130,12 +130,17 @@
    (loop :for curs :in (caddr x) :do
       (make-curs :name curs)))
 
+;; Получаем все курсы
 (all-curs)
+
+;; Получаем всех учителей
 (all-teacher)
 
+;; Получаем названия всех курсов
 (mapcar #'(lambda (x)
             (print (name (car x))))
         (all-curs))
 
+;; Находим объект курса по имени
 (find-curs #'(lambda (x)
                (string= (name (car x)) "Безопасность ГТС")))
