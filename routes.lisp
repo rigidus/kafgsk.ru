@@ -87,15 +87,27 @@
                                       (let ((rs))
                                         (loop :for (teacher . teacher-id) :in (all-teacher) :do
                                            (when (find curs-id (curses teacher))
-                                             (push (name teacher) rs)))
-                                        (format nil "~A <ul> ~{ <li> ~A </li> ~} </ul>"
+                                             (push (format nil "<a href=\"/prepody#id~A\">~A</a>"
+                                                           teacher-id
+                                                           (name teacher))
+                                                   rs)))
+                                        (format nil "<a name=\"~A\">~A</a> <ul> ~{ <li> ~A </li> ~} </ul>"
+                                                curs-id
                                                 (name curs)
                                                 rs)))))))
 
-
-
 (def/route prepody ("prepody")
-  (old-page "content/prepody.htm"))
+  (tpl:root (list :content (format nil  "<br /> <ul> ~{ <br /> <li> ~A </li> ~} </ul>"
+                                   (loop :for (teacher . teacher-id) :in (all-teacher) :collect
+                                      (format nil "<a name=\"id~A\">~A</a> ~A"
+                                              teacher-id
+                                              (name teacher)
+                                              (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
+                                                      (mapcar #'(lambda (x)
+                                                                  (format nil "<a href=\"/predmety#~A\">~A</a>"
+                                                                          x
+                                                                          (name (get-curs x))))
+                                                              (curses teacher)))))))))
 
 (def/route pr_etap1 ("pr_etap1")
   (old-page "content/pr_etap1.htm"))
