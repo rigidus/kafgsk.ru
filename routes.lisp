@@ -82,7 +82,11 @@
   (old-page "content/pr_doc.htm"))
 
 (def/route predmety ("predmety")
-  (tpl:root (list :content "<br /><br />Тут будет список предметов")))
+  (tpl:root (list :content (format nil "<br />~{<br />~A~}"
+                                   ;; Получаем названия всех курсов
+                                   (mapcar #'(lambda (x)
+                                               (print (name (car x))))
+                                           (all-curs))))))
 
 (def/route prepody ("prepody")
   (old-page "content/prepody.htm"))
