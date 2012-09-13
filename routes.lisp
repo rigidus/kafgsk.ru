@@ -82,7 +82,7 @@
   (old-page "content/pr_doc.htm"))
 
 (def/route predmety ("predmety")
-  (old-page "content/predmety.htm"))
+  (tpl:root (list :content "<br /><br />Тут будет список предметов")))
 
 (def/route prepody ("prepody")
   (old-page "content/prepody.htm"))
