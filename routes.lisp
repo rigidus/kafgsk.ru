@@ -82,11 +82,17 @@
   (old-page "content/pr_doc.htm"))
 
 (def/route predmety ("predmety")
-  (tpl:root (list :content (format nil "<br />~{<br />~A~}"
-                                   ;; Получаем названия всех курсов
-                                   (mapcar #'(lambda (x)
-                                               (print (name (car x))))
-                                           (all-curs))))))
+  (tpl:root (list :content (format nil  "<br /> <ul> ~{ <br /> <li> ~A </li> ~} </ul>"
+                                   (loop :for (curs . curs-id) :in (all-curs) :collect
+                                      (let ((rs))
+                                        (loop :for (teacher . teacher-id) :in (all-teacher) :do
+                                           (when (find curs-id (curses teacher))
+                                             (push (name teacher) rs)))
+                                        (format nil "~A <ul> ~{ <li> ~A </li> ~} </ul>"
+                                                (name curs)
+                                                rs)))))))
+
+
 
 (def/route prepody ("prepody")
   (old-page "content/prepody.htm"))
