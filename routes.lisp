@@ -33,9 +33,6 @@
        ,@body)))
 
 
-
-
-
 (def/route 01.07.12 ("01.07.12")
   (old-page "content/01.07.12.htm"))
 
@@ -99,7 +96,8 @@
 (def/route prepody ("prepody")
   (tpl:root (list :content (format nil  "<br /> <ul> ~{ <br /> <li> ~A </li> ~} </ul>"
                                    (loop :for (teacher . teacher-id) :in (all-teacher) :collect
-                                      (format nil "<a name=\"id~A\">~A</a> ~A"
+                                      (format nil "<a name=\"id~A\" href=\"prepody/~A\">~A</a> ~A"
+                                              teacher-id
                                               teacher-id
                                               (name teacher)
                                               (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
@@ -108,6 +106,25 @@
                                                                           x
                                                                           (name (get-curs x))))
                                                               (curses teacher)))))))))
+
+(def/route prepody/id ("prepody/:teacher-id")
+  (let ((teacher (get-teacher (parse-integer teacher-id :junk-allowed t))))
+    (tpl:root (list :content
+                    (concatenate 'string
+                                 (format nil "<br /> <br /> ~A <br /> <br /> Курсы: <br /> ~A "
+                                         (name teacher)
+                                         (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
+                                                 (mapcar #'(lambda (x)
+                                                             (format nil "<a href=\"/predmety#~A\">~A</a>"
+                                                                     x
+                                                                     (name (get-curs x))))
+                                                         (curses teacher))))
+                                 (let ((filename (path (format nil "content/prepody/~A.htm" teacher-id))))
+                                   (if (probe-file filename)
+                                       (alexandria:read-file-into-string filename)
+                                       "wfweef")))))))
+
+
 
 (def/route pr_etap1 ("pr_etap1")
   (old-page "content/pr_etap1.htm"))
