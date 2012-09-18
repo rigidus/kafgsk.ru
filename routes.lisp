@@ -78,34 +78,49 @@
 (def/route pr_doc ("pr_doc")
   (old-page "content/pr_doc.htm"))
 
+
 (def/route predmety ("predmety")
-  (tpl:root (list :content (format nil  "<br /> <ul> ~{ <br /> <li> ~A </li> ~} </ul>"
+  (tpl:root (list :content (format nil "<br /> <ul> ~{ <br /><li> ~A </li> ~} </ul>"
                                    (loop :for (curs . curs-id) :in (all-curs) :collect
                                       (let ((rs))
-                                        (loop :for (teacher . teacher-id) :in (all-teacher) :do
-                                           (when (find curs-id (curses teacher))
-                                             (push (format nil "<a href=\"/prepody#id~A\">~A</a>"
-                                                           teacher-id
-                                                           (name teacher))
-                                                   rs)))
-                                        (format nil "<a name=\"~A\">~A</a> <ul> ~{ <li> ~A </li> ~} </ul>"
+                                        (format nil "<a name=\"id~A\" href=\"predmety/~A\">~A</a> ~A"
+                                                curs-id
                                                 curs-id
                                                 (name curs)
                                                 rs)))))))
 
+
+
+(def/route predmety/id ("predmety/:curs-id")
+  (let ((curs (get-curs (parse-integer curs-id :junk-allowed t))))
+    (tpl:root (list :content
+                    (concatenate 'string
+                                 (format nil "<br /> <br /> ~A <br /> <br /> Предметы: <br /> ~A "
+                                         (name curs)
+                                         (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
+                                                 (mapcar #'(lambda (x)
+                                                             (format nil "<a href=\"/prepody/~A\">~A</a>"
+                                                                     x
+                                                                     (name (get-teacher x))))
+                                                         (rs)))
+                                 (let ((filename (path (format nil "content/predmety/~A.htm" curs-id))))
+                                   (if (probe-file filename)
+                                       (alexandria:read-file-into-string filename)
+                                       "wfweef"))))))))
+
+
+
 (def/route prepody ("prepody")
-  (tpl:root (list :content (format nil  "<br /> <ul> ~{ <br /> <li> ~A </li> ~} </ul>"
+  (tpl:root (list :content (format nil "<br /> <ul> ~{ <br /><li> ~A </li> ~} </ul>"
                                    (loop :for (teacher . teacher-id) :in (all-teacher) :collect
-                                      (format nil "<a name=\"id~A\" href=\"prepody/~A\">~A</a> ~A"
-                                              teacher-id
-                                              teacher-id
-                                              (name teacher)
-                                              (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
-                                                      (mapcar #'(lambda (x)
-                                                                  (format nil "<a href=\"/predmety#~A\">~A</a>"
-                                                                          x
-                                                                          (name (get-curs x))))
-                                                              (curses teacher)))))))))
+                                      (let ((rs))
+                                        (format nil "<a name=\"id~A\" href=\"prepody/~A\">~A</a> ~A"
+                                                        teacher-id
+                                                        teacher-id
+                                                        (name teacher)
+                                                        rs)))))))
+
+
 
 (def/route prepody/id ("prepody/:teacher-id")
   (let ((teacher (get-teacher (parse-integer teacher-id :junk-allowed t))))
@@ -115,7 +130,7 @@
                                          (name teacher)
                                          (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
                                                  (mapcar #'(lambda (x)
-                                                             (format nil "<a href=\"/predmety#~A\">~A</a>"
+                                                             (format nil "<a href=\"/predmety/~A\">~A</a>"
                                                                      x
                                                                      (name (get-curs x))))
                                                          (curses teacher))))
