@@ -60,6 +60,81 @@
 (def/route diplomy ("diplomy")
   (old-page "content/diplomy.htm"))
 
+
+(def/route predmety ("predmety")
+  (tpl:root (list :content (format nil "<br /> <ul> ~{ <br /><li> ~A </li> ~} </ul>"
+                                   (loop :for (curs . curs-id) :in (all-curs) :collect
+                                      (format nil "<a name=\"id~A\" href=\"predmety/~A\">~A</a>"
+                                              curs-id
+                                              curs-id
+                                              (name curs)))))))
+
+
+(loop :for (curs . curs-id) :in (all-curs) :collect
+
+   (let ((curs (get-curs 1))
+         (curs-id 1))
+
+     (let ((rs))
+       (loop :for (teacher . teacher-id) :in (all-teacher) :do
+          (when (find curs-id (curses teacher))
+            (push (format nil "<a href=\"/prepody#id~A\">~A</a>"
+                          teacher-id
+                          (name teacher))
+                  rs)))
+       rs))
+
+
+
+(def/route predmety/id ("predmety/:curs-id")
+  (let* ((curs-id (parse-integer curs-id :junk-allowed t))
+         (curs (get-curs curs-id)))
+    (tpl:root (list :content
+                    (concatenate 'string
+                                 (format nil "<br /> <br /> ~A <br /> <br /> Преподаватели: <br /> ~A ~A"
+                                         (name curs)
+                                         (let ((rs))
+                                           (loop :for (teacher . teacher-id) :in (all-teacher) :do
+                                              (when (find curs-id (curses teacher))
+                                                (push (format nil "<a href=\"/prepody#id~A\">~A</a>"
+                                                              teacher-id
+                                                              (name teacher))
+                                                      rs)))
+                                           (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
+                                                   rs))
+                                         (let ((filename (path (format nil "content/predmety/~A.htm" curs-id))))
+                                           (if (probe-file filename)
+                                               (alexandria:read-file-into-string filename)
+                                               "warning: no file!"))))))))
+
+
+(def/route prepody ("prepody")
+  (tpl:root (list :content (format nil "<br /> <ul> ~{ <br /><li> ~A </li> ~} </ul>"
+                                   (loop :for (teacher . teacher-id) :in (all-teacher) :collect
+                                        (format nil "<a name=\"id~A\" href=\"prepody/~A\">~A</a>"
+                                                teacher-id
+                                                teacher-id
+                                                (name teacher)))))))
+
+
+(def/route prepody/id ("prepody/:teacher-id")
+  (let ((teacher (get-teacher (parse-integer teacher-id :junk-allowed t))))
+    (tpl:root (list :content
+                    (concatenate 'string
+                                 (format nil "<br /> <br /> ~A <br /> <br /> Курсы: <br /> ~A "
+                                         (name teacher)
+                                         (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
+                                                 (mapcar #'(lambda (x)
+                                                             (format nil "<a href=\"/predmety/~A\">~A</a>"
+                                                                     x
+                                                                     (name (get-curs x))))
+                                                         (curses teacher))))
+                                 (let ((filename (path (format nil "content/prepody/~A.htm" teacher-id))))
+                                   (if (probe-file filename)
+                                       (alexandria:read-file-into-string filename)
+                                       "warning: no file!")))))))
+
+
 (def/route foto ("foto")
   (old-page "content/foto.htm"))
 
@@ -78,66 +153,6 @@
 (def/route pr_doc ("pr_doc")
   (old-page "content/pr_doc.htm"))
 
-
-(def/route predmety ("predmety")
-  (tpl:root (list :content (format nil "<br /> <ul> ~{ <br /><li> ~A </li> ~} </ul>"
-                                   (loop :for (curs . curs-id) :in (all-curs) :collect
-                                      (let ((rs))
-                                        (format nil "<a name=\"id~A\" href=\"predmety/~A\">~A</a> ~A"
-                                                curs-id
-                                                curs-id
-                                                (name curs)
-                                                rs)))))))
-
-
-
-(def/route predmety/id ("predmety/:curs-id")
-  (let ((curs (get-curs (parse-integer curs-id :junk-allowed t))))
-    (tpl:root (list :content
-                    (concatenate 'string
-                                 (format nil "<br /> <br /> ~A <br /> <br /> Предметы: <br /> ~A "
-                                         (name curs)
-                                         (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
-                                                 (mapcar #'(lambda (x)
-                                                             (format nil "<a href=\"/prepody/~A\">~A</a>"
-                                                                     x
-                                                                     (name (get-teacher x))))
-                                                         (rs)))
-                                 (let ((filename (path (format nil "content/predmety/~A.htm" curs-id))))
-                                   (if (probe-file filename)
-                                       (alexandria:read-file-into-string filename)
-                                       "wfweef"))))))))
-
-
-
-(def/route prepody ("prepody")
-  (tpl:root (list :content (format nil "<br /> <ul> ~{ <br /><li> ~A </li> ~} </ul>"
-                                   (loop :for (teacher . teacher-id) :in (all-teacher) :collect
-                                      (let ((rs))
-                                        (format nil "<a name=\"id~A\" href=\"prepody/~A\">~A</a> ~A"
-                                                        teacher-id
-                                                        teacher-id
-                                                        (name teacher)
-                                                        rs)))))))
-
-
-
-(def/route prepody/id ("prepody/:teacher-id")
-  (let ((teacher (get-teacher (parse-integer teacher-id :junk-allowed t))))
-    (tpl:root (list :content
-                    (concatenate 'string
-                                 (format nil "<br /> <br /> ~A <br /> <br /> Курсы: <br /> ~A "
-                                         (name teacher)
-                                         (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
-                                                 (mapcar #'(lambda (x)
-                                                             (format nil "<a href=\"/predmety/~A\">~A</a>"
-                                                                     x
-                                                                     (name (get-curs x))))
-                                                         (curses teacher))))
-                                 (let ((filename (path (format nil "content/prepody/~A.htm" teacher-id))))
-                                   (if (probe-file filename)
-                                       (alexandria:read-file-into-string filename)
-                                       "wfweef")))))))
 
 
 
