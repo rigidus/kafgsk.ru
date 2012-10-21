@@ -18,7 +18,7 @@
 ;; main
 
 (restas:define-route main ("/")
-  (old-page "content/main.htm"))
+  (old-page "content/index.htm"))
 
 
 ;; plan file pages
@@ -32,6 +32,8 @@
          ,(cons (concatenate 'string (car param) "/") (cdr param))
        ,@body)))
 
+(def/route 22.10.12 ("22.10.12")
+  (old-page "content/22.10.12.htm"))
 
 (def/route 01.07.12 ("01.07.12")
   (old-page "content/01.07.12.htm"))

@@ -23,12 +23,13 @@ p,cite,code,ul {
 
 h1 {
 	font: normal 1.2em "Lucida Sans Unicode",times new roman;
+    align: justify;
 }
 
 h2 {
 	font: normal 1.2em "Lucida Sans Unicode",times new roman;
     text-size: 20px;
-	text-align: justify;
+	align: justify;
 }
 
 table {table-layout: auto;
