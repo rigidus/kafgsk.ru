@@ -33,6 +33,12 @@
          ,(cons (concatenate 'string (car param) "/") (cdr param))
        ,@body)))
 
+(def/route 26.10.12 ("26.10.12")
+  (old-page "content/26.10.12.htm"))
+
+(def/route 25.10.12 ("25.10.12")
+  (old-page "content/25.10.12.htm"))
+
 (def/route 22.10.12 ("22.10.12")
   (old-page "content/22.10.12.htm"))
 
