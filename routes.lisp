@@ -114,7 +114,7 @@
                                          (let ((filename (path (format nil "content/predmety/~A.htm" curs-id))))
                                            (if (probe-file filename)
                                                (alexandria:read-file-into-string filename)
-                                               "warning: no file!"))))))))
+                                               (format nil "warning: no file: ~A" filename)))))))))
 
 
 (def/route prepody ("prepody")
@@ -130,7 +130,7 @@
   (let ((teacher (get-teacher (parse-integer teacher-id :junk-allowed t))))
     (tpl:root (list :content
                     (concatenate 'string
-                                 (format nil "<br /> <br /> ~A <br /> <br /> Предметы: <br /> ~A "
+                                 (format nil "<br /> <br />~A<br /> <br /> Предметы: <br /> ~A "
                                          (name teacher)
                                          (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
                                                  (mapcar #'(lambda (x)
@@ -141,7 +141,7 @@
                                  (let ((filename (path (format nil "content/prepody/~A.htm" teacher-id))))
                                    (if (probe-file filename)
                                        (alexandria:read-file-into-string filename)
-                                       "warning: no file!")))))))
+                                       (format nil "warning: no file ~A" filename))))))))
 
 
 (def/route foto ("foto")
@@ -161,9 +161,6 @@
 
 (def/route pr_doc ("pr_doc")
   (old-page "content/pr_doc.htm"))
-
-
-
 
 (def/route pr_etap1 ("pr_etap1")
   (old-page "content/pr_etap1.htm"))
