@@ -39,4 +39,3 @@
   (merge-pathnames relative *basedir*))
 
 (closure-template:compile-template :common-lisp-backend (path "templates.htm"))
-

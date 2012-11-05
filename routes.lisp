@@ -133,7 +133,7 @@
   (let ((teacher (get-teacher (parse-integer teacher-id :junk-allowed t))))
     (tpl:root (list :content
                     (concatenate 'string
-                                 (format nil "<br /> <br />~A<br /> <br /> Предметы: <br /> ~A "
+                                 (format nil "<br /> <br /><h2>~A</h2><br /> <br /> Предметы: <br /> ~A "
                                          (name teacher)
                                          (format nil "<ul> ~{ <li> ~A </li> ~} </ul>"
                                                  (mapcar #'(lambda (x)
