@@ -103,7 +103,7 @@
          (curs (get-curs curs-id)))
     (tpl:root (list :content
                     (concatenate 'string
-                                 (format nil "<br /> <br /> ~A <br /> <br /> Преподаватели: <br /> ~A ~A"
+                                 (format nil "<br /> <br /><h2>~A</h2><br /> <br /> Преподаватели: <br /> ~A ~A"
                                          (name curs)
                                          (let ((rs))
                                            (loop :for (teacher . teacher-id) :in (all-teacher) :do
