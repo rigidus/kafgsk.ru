@@ -50,3 +50,31 @@
 ;; Приводить слово к нормальной форме (отрезать окончания)
 ;; Оценивать релевантность
 ;; Выводить сниппет
+
+;; Релевантность (пример)
+
+(setf word "для")
+(setf str-one "предположим, для примера, что вы пишете программу для")
+(setf str-two "для для для")
+(setf str-three "это для тебя")
+(setf all-strings (list str-one str-two str-three))
+
+(let ((y 0))
+(defun my-search (str)
+  (let ((x (search word str)))
+    (if (search word str)
+        (progn
+          (setf y (+ y 1))
+          (my-search (subseq str (+ x (length word)))))
+        y))))
+
+(defun sort-strings (strings)
+  (sort
+   (mapcar #'my-search strings) #'>))
+
+(sort-strings all-strings)
+
+(trace my-search)
+
+(my-search str-one)
+
